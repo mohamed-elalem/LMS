@@ -86,26 +86,14 @@ public class LoginWindow extends Stage implements LibWindow {
         			ControllerInterface c = new SystemController();
         			String userId = userTextField.getText().trim();
         			String password = pwBox.getText().trim();
-        			
+
         			c.login(userId, password);
-        			User user = c.getUserById(userId);
         			messageBar.setFill(Start.Colors.green);
         			messageBar.setText("Login successful");
-        			
-        			switch (user.getAuthorization()) {
-        			case LIBRARIAN:
-        				Start.hideAllWindows();
-        				LibrarianWindow.INSTANCE.show();
-        				break;
-        			case ADMIN:
-        				Start.hideAllWindows();
-        				AdminWindow.INSTANCE.show();
-        				break;
-        			case BOTH:
-        				Start.hideAllWindows();
-        				LibrarianAdminWindow.INSTANCE.show();
-        				break;
-        			}
+
+        			Start.hideAllWindows();
+        			Start.updatePrimaryStage();
+        			Start.primStage().show();
         		} catch(LoginException ex) {
         			messageBar.setFill(Start.Colors.red);
         			messageBar.setText("Error! " + ex.getMessage());
