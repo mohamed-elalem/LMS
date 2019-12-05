@@ -4,10 +4,10 @@ import java.io.Serializable;
 
 public class Person implements Serializable {
 	private static final long serialVersionUID = 3665880920647848288L;
-	private String firstName;
-	private String lastName;
-	private String telephone;
-	private Address address;
+	protected String firstName;
+	protected String lastName;
+	protected String telephone;
+	protected Address address;
 	public Person(String f, String l, String t, Address a) {
 		firstName = f;
 		lastName = l;
@@ -38,4 +38,12 @@ public class Person implements Serializable {
 	public void setAddress(Address address) {
 		this.address = address;
 	}
+	@Override
+	public String toString() {
+		return "Person [firstName=" + firstName + ", lastName=" + lastName + ", telephone=" + telephone + ", address="
+				+ address + "]";
+	}
+	
+	
+	
 }
