@@ -47,7 +47,9 @@ public class Start extends Application {
 	private static Stage[] allWindows = { 
 		LoginWindow.INSTANCE,
 		AllMembersWindow.INSTANCE,	
-		AllBooksWindow.INSTANCE
+		AllBooksWindow.INSTANCE,
+		CheckoutBookWindow.INSTANCE,
+		CheckoutDetailsWindow.INSTANCE
 	};
 	
 	public static void hideAllWindows() {
@@ -55,6 +57,12 @@ public class Start extends Application {
 		for(Stage st: allWindows) {
 			st.hide();
 		}
+	}
+	
+	public static void showPrimaryStageOnly() {
+		hideAllWindows();
+		updatePrimaryStage();
+		primStage().show();
 	}
 	
 	@Override
@@ -140,8 +148,31 @@ public class Start extends Application {
             }
 		});	
 		optionsMenu.getItems().addAll(login, bookIds, memberIds);
+		
+		Menu librarianMenu = new Menu("Librarian");
+		MenuItem checkoutBookMenuItem = new MenuItem("Checkout a Book");
 
-		mainMenu.getMenus().addAll(optionsMenu);
+		checkoutBookMenuItem.setOnAction(evt -> {
+			hideAllWindows();
+			CheckoutBookWindow.INSTANCE.show();
+		});
+
+		librarianMenu.getItems().addAll(checkoutBookMenuItem);
+
+		Menu actionsMenu = new Menu("Actions");
+		MenuItem logoutMenuItem = new MenuItem("Logout");
+		
+		logoutMenuItem.setOnAction(evt -> {
+			SystemController.removeAuth();
+			hideAllWindows();
+			updatePrimaryStage();
+			primStage().show();
+		});
+		
+		actionsMenu.getItems().add(logoutMenuItem);
+		
+		mainMenu.getMenus().addAll(optionsMenu, librarianMenu, actionsMenu);
+
 		Scene scene = new Scene(topContainer, 420, 375);
 		primaryStage.setScene(scene);
 		scene.getStylesheets().add(getClass().getResource("library.css").toExternalForm());

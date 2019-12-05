@@ -12,6 +12,10 @@ import dataaccess.User;
 public class SystemController implements ControllerInterface {
 	public static Auth currentAuth = null;
 	
+	public static void removeAuth() {
+		currentAuth = null;
+	}
+	
 	public void login(String id, String password) throws LoginException {
 		DataAccess da = new DataAccessFacade();
 		HashMap<String, User> map = da.readUserMap();
@@ -40,17 +44,4 @@ public class SystemController implements ControllerInterface {
 		retval.addAll(da.readBooksMap().keySet());
 		return retval;
 	}
-	@Override
-	public User getUserById(String id) {
-		DataAccess da = new DataAccessFacade();
-		HashMap<String, User> users = da.readUserMap();
-
-		User user = null;
-		if (users.containsKey(id)) {
-			user = users.get(id);
-		}
-		return user;
-	}
-	
-	
 }

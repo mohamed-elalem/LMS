@@ -59,6 +59,14 @@ public class DataAccessFacade implements DataAccess {
 		return (HashMap<String, User>)readFromStorage(StorageType.USERS);
 	}
 	
+	public static void updateMembersData(HashMap<String, LibraryMember> members) {
+		saveToStorage(StorageType.MEMBERS, members);
+	}
+	
+	public static void updateBooksData(HashMap<String, Book> books) {
+		saveToStorage(StorageType.BOOKS, books);
+	}
+	
 	
 	/////load methods - these place test data into the storage area
 	///// - used just once at startup  
@@ -93,7 +101,9 @@ public class DataAccessFacade implements DataAccess {
 			if(out != null) {
 				try {
 					out.close();
-				} catch(Exception e) {}
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
