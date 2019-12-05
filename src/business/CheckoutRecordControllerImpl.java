@@ -1,6 +1,9 @@
 package business;
 
 
+import java.time.LocalDate;
+import java.util.HashMap;
+
 import dataaccess.DataAccess;
 import dataaccess.DataAccessFacade;
 
@@ -14,9 +17,38 @@ public class CheckoutRecordControllerImpl implements CheckoutRecordController {
 		if (member == null) {
 			throw new MemberNotFoundException("Member not found!");
 		}
+		System.out.println(member.getCheckoutRecord().getEntries());
 		
-		//System.out.println(member);
-		
+	}
+
+	@Override
+	public CheckoutEntry checkOverdue(String isbn, int copyNum) 
+		throws BookNotFoundException, BookCopyNotFoundException {
+		Book book = da.readBooksMap().get(isbn);
+		if (book == null) {
+			throw new BookNotFoundException("Book not found");
+		} 
+		BookCopy copy = book.getCopy(copyNum);
+		if (copy == null) {
+			throw new BookCopyNotFoundException("Book Copy not found");
+		}
+		CheckoutEntry entry = findEntryByBookCopy(isbn, copyNum);
+		if (entry != null && LocalDate.now().isAfter(entry.getDueDate())) {
+			return entry;
+		}
+		return null;
+	}
+
+	private CheckoutEntry findEntryByBookCopy(String isbn, int copyNum) {
+		for (LibraryMember m : da.readMemberMap().values()) {
+			for (CheckoutEntry entry : m.getCheckoutRecord().getEntries()) {
+				BookCopy copy = entry.getBookCopy();
+				if (copy.getCopyNum() == copyNum && 
+						copy.getBook().getIsbn().equals(isbn))
+					return entry;
+			}
+		}
+		return null;
 	}
 
 }

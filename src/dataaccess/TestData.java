@@ -1,5 +1,6 @@
 package dataaccess;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -7,6 +8,8 @@ import java.util.List;
 import business.Address;
 import business.Author;
 import business.Book;
+import business.BookCopy;
+import business.CheckoutRecord;
 import business.LibraryMember;
 
 /**
@@ -50,11 +53,21 @@ public class TestData {
 	public void libraryMemberData() {
 		LibraryMember libraryMember = new LibraryMember("1001", "Andy", "Rogers", "641-223-2211", addresses.get(4));
 		members.add(libraryMember);
+		
 		libraryMember = new LibraryMember("1002", "Drew", "Stevens", "702-998-2414", addresses.get(5));
 		members.add(libraryMember);
 		
 		libraryMember = new LibraryMember("1003", "Sarah", "Eagleton", "451-234-8811", addresses.get(6));
 		members.add(libraryMember);
+		CheckoutRecord record = new CheckoutRecord(libraryMember);
+		
+		BookCopy copy = allBooks.get(0).getCopy(1);
+		LocalDate dateCheckout = LocalDate.of(2019, 11, 1);
+		record.addEntry(copy, dateCheckout, dateCheckout.plusDays(copy.getBook().getMaxCheckoutLength()));
+		
+		copy = allBooks.get(1).getCopy(1);
+		dateCheckout = LocalDate.of(2019, 11, 20);
+		record.addEntry(copy, dateCheckout, dateCheckout.plusDays(copy.getBook().getMaxCheckoutLength()));
 		
 		libraryMember = new LibraryMember("1004", "Ricardo", "Montalbahn", "641-472-2871", addresses.get(7));
 		members.add(libraryMember);
