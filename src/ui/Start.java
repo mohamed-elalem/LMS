@@ -25,6 +25,7 @@ import javafx.stage.Stage;
 
 
 public class Start extends Application {
+
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -47,7 +48,9 @@ public class Start extends Application {
 	private static Stage[] allWindows = { 
 		LoginWindow.INSTANCE,
 		AllMembersWindow.INSTANCE,	
-		AllBooksWindow.INSTANCE
+		AllBooksWindow.INSTANCE,
+		LibraryMemberWindow.INSTANCE,
+		BookCopyWindow.INSTANCE
 	};
 	
 	public static void hideAllWindows() {
@@ -141,7 +144,36 @@ public class Start extends Application {
 		});	
 		optionsMenu.getItems().addAll(login, bookIds, memberIds);
 
-		mainMenu.getMenus().addAll(optionsMenu);
+		
+		//Librarian Menu
+		
+		
+		//Administrator Menu
+		Menu mnAdmin = new Menu("Administrator");
+		MenuItem mniAddLibraryMember = new MenuItem("Add Library Member");
+		mniAddLibraryMember.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				if(!LibraryMemberWindow.INSTANCE.isInitialized()) {
+					LibraryMemberWindow.INSTANCE.init();
+				}
+				LibraryMemberWindow.INSTANCE.show();
+			}
+		});
+		
+		MenuItem mniAddBookCopy = new MenuItem("Add Book Copy");
+		mniAddBookCopy.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				if(!BookCopyWindow.INSTANCE.isInitialized()) {
+					BookCopyWindow.INSTANCE.init();
+				}
+				BookCopyWindow.INSTANCE.show();
+			}
+		});
+		mnAdmin.getItems().addAll(mniAddLibraryMember, mniAddBookCopy);
+		
+		mainMenu.getMenus().addAll(optionsMenu, mnAdmin);
 		Scene scene = new Scene(topContainer, 420, 375);
 		primaryStage.setScene(scene);
 		scene.getStylesheets().add(getClass().getResource("library.css").toExternalForm());
