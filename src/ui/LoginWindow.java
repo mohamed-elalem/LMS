@@ -3,6 +3,8 @@ package ui;
 import business.ControllerInterface;
 import business.LoginException;
 import business.SystemController;
+import dataaccess.User;
+import dataaccess.Auth;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -14,7 +16,6 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -40,6 +41,7 @@ public class LoginWindow extends Stage implements LibWindow {
     private LoginWindow () {}
     
     public void init() { 
+    	
         GridPane grid = new GridPane();
         grid.setId("top-container");
         grid.setAlignment(Pos.CENTER);
@@ -82,9 +84,16 @@ public class LoginWindow extends Stage implements LibWindow {
         	public void handle(ActionEvent e) {
         		try {
         			ControllerInterface c = new SystemController();
-        			c.login(userTextField.getText().trim(), pwBox.getText().trim());
+        			String userId = userTextField.getText().trim();
+        			String password = pwBox.getText().trim();
+
+        			c.login(userId, password);
         			messageBar.setFill(Start.Colors.green);
-             	    messageBar.setText("Login successful");
+        			messageBar.setText("Login successful");
+
+        			Start.hideAllWindows();
+        			Start.updatePrimaryStage();
+        			Start.primStage().show();
         		} catch(LoginException ex) {
         			messageBar.setFill(Start.Colors.red);
         			messageBar.setText("Error! " + ex.getMessage());

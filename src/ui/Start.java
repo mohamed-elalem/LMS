@@ -33,6 +33,12 @@ public class Start extends Application {
 		return primStage;
 	}
 	
+	public static void updatePrimaryStage() {
+		if (SystemController.currentAuth != null) {
+			primStage.setTitle("Main Page - " + SystemController.currentAuth.toString());
+		}
+	}
+
 	public static class Colors {
 		static Color green = Color.web("#034220");
 		static Color red = Color.FIREBRICK;
