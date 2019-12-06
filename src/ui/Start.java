@@ -28,6 +28,7 @@ import javafx.stage.Stage;
 public class Start extends Application {
 	private static List<MenuItem> librarianMenuItems = new ArrayList<>();
 	private static List<MenuItem> adminMenuItems = new ArrayList<>();
+	private static List<MenuItem> loggedInUser = new ArrayList<>();
 
 	public static void main(String[] args) {
 		launch(args);
@@ -36,31 +37,32 @@ public class Start extends Application {
 	public static Stage primStage() {
 		return primStage;
 	}
+ 	
+	public static void setMenuItemVisibilityStatus(List<MenuItem> items, boolean visible) {
+		for (MenuItem item : items) {
+			item.setDisable(!visible);
+		}
+	}
 	
-	public static void updatePrimaryStage() {
+	public static void updatePrimaryStage() {		
+		setMenuItemVisibilityStatus(adminMenuItems, false);
+		setMenuItemVisibilityStatus(librarianMenuItems, false);
+		setMenuItemVisibilityStatus(loggedInUser, false);
+
 		if (SystemController.currentAuth != null) {
+			setMenuItemVisibilityStatus(loggedInUser, true);
 			primStage.setTitle("Main Page - " + SystemController.currentAuth.toString());
-			
-			for (MenuItem menuItem : librarianMenuItems) {
-				menuItem.setDisable(true);
-			}
-			
-			for (MenuItem menuItem : adminMenuItems) {
-				menuItem.setDisable(true);
-			}
 			
 			switch (SystemController.currentAuth) {
 			case LIBRARIAN:
-				for (MenuItem menuItem : librarianMenuItems) {
-					menuItem.setDisable(false);
-				}
+				setMenuItemVisibilityStatus(librarianMenuItems, true);
 				break;
 			case ADMIN:
-				for (MenuItem menuItem : adminMenuItems) {
-					menuItem.setDisable(false);
-				}
+				setMenuItemVisibilityStatus(adminMenuItems, true);
 				break;
 			case BOTH:
+				setMenuItemVisibilityStatus(librarianMenuItems, true);
+				setMenuItemVisibilityStatus(adminMenuItems, true);
 				for (MenuItem menuItem : librarianMenuItems) {
 					menuItem.setDisable(false);
 				}
@@ -70,6 +72,7 @@ public class Start extends Application {
 				}
 			}
 		} else {
+			primStage().setTitle("Main Page");
 			for (MenuItem menuItem : librarianMenuItems) {
 				menuItem.setDisable(true);
 			}
@@ -213,6 +216,8 @@ public class Start extends Application {
 
 		Menu actionsMenu = new Menu("Actions");
 		MenuItem logoutMenuItem = new MenuItem("Logout");
+		
+		loggedInUser.add(logoutMenuItem);
 		
 		logoutMenuItem.setOnAction(evt -> {
 			SystemController.removeAuth();

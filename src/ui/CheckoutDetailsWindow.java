@@ -57,8 +57,7 @@ public class CheckoutDetailsWindow extends Stage implements LibWindow {
 		Button backButton = new Button(Character.toString((char) 11176) + " Back");
 		backButton.setOnAction(evt -> {
 			Start.hideAllWindows();
-			Start.updatePrimaryStage();
-			Start.primStage().show();
+			CheckoutBookWindow.INSTANCE.show();
 		});
 
 		Button confirmButton = new Button("Confirm");
