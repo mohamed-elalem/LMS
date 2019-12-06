@@ -13,7 +13,7 @@ final public class LibraryMember extends Person implements Serializable {
 	public LibraryMember(String memberId, String fname, String lname, String tel,Address add) {
 		super(fname,lname, tel, add);
 		this.memberId = memberId;
-		checkoutRecord = new CheckoutRecord();
+		checkoutRecord = new CheckoutRecord(this);
 	}
 	
 	
@@ -41,6 +41,10 @@ final public class LibraryMember extends Person implements Serializable {
 	
 	public CheckoutRecord getCheckoutRecord() {
 		return checkoutRecord;
+	}
+	
+	public String fullName() {
+		return getFirstName() + " " + getLastName();
 	}
 
 	private static final long serialVersionUID = -2226197306790714013L;

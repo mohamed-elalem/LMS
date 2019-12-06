@@ -1,5 +1,6 @@
 package ui;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,6 +26,9 @@ import javafx.stage.Stage;
 
 
 public class Start extends Application {
+	private static List<MenuItem> librarianMenuItems = new ArrayList<>();
+	private static List<MenuItem> adminMenuItems = new ArrayList<>();
+
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -36,6 +40,43 @@ public class Start extends Application {
 	public static void updatePrimaryStage() {
 		if (SystemController.currentAuth != null) {
 			primStage.setTitle("Main Page - " + SystemController.currentAuth.toString());
+			
+			for (MenuItem menuItem : librarianMenuItems) {
+				menuItem.setDisable(true);
+			}
+			
+			for (MenuItem menuItem : adminMenuItems) {
+				menuItem.setDisable(true);
+			}
+			
+			switch (SystemController.currentAuth) {
+			case LIBRARIAN:
+				for (MenuItem menuItem : librarianMenuItems) {
+					menuItem.setDisable(false);
+				}
+				break;
+			case ADMIN:
+				for (MenuItem menuItem : adminMenuItems) {
+					menuItem.setDisable(false);
+				}
+				break;
+			case BOTH:
+				for (MenuItem menuItem : librarianMenuItems) {
+					menuItem.setDisable(false);
+				}
+				
+				for (MenuItem menuItem : adminMenuItems) {
+					menuItem.setDisable(false);
+				}
+			}
+		} else {
+			for (MenuItem menuItem : librarianMenuItems) {
+				menuItem.setDisable(true);
+			}
+			
+			for (MenuItem menuItem : adminMenuItems) {
+				menuItem.setDisable(true);
+			}
 		}
 	}
 
@@ -49,7 +90,8 @@ public class Start extends Application {
 		AllMembersWindow.INSTANCE,	
 		AllBooksWindow.INSTANCE,
 		CheckoutBookWindow.INSTANCE,
-		CheckoutDetailsWindow.INSTANCE
+		CheckoutDetailsWindow.INSTANCE,
+		CheckoutRecordEntriesWindow.INSTANCE
 	};
 	
 	public static void hideAllWindows() {
@@ -151,13 +193,23 @@ public class Start extends Application {
 		
 		Menu librarianMenu = new Menu("Librarian");
 		MenuItem checkoutBookMenuItem = new MenuItem("Checkout a Book");
+		MenuItem viewCheckoutsMenuItem = new MenuItem("View Checkouts");
+		
+		librarianMenuItems.add(checkoutBookMenuItem);
+		librarianMenuItems.add(viewCheckoutsMenuItem);
 
 		checkoutBookMenuItem.setOnAction(evt -> {
 			hideAllWindows();
 			CheckoutBookWindow.INSTANCE.show();
 		});
+		
+		viewCheckoutsMenuItem.setOnAction(evt -> {
+			hideAllWindows();
+			CheckoutRecordEntriesWindow.INSTANCE.update();
+			CheckoutRecordEntriesWindow.INSTANCE.show();
+		});
 
-		librarianMenu.getItems().addAll(checkoutBookMenuItem);
+		librarianMenu.getItems().addAll(checkoutBookMenuItem, viewCheckoutsMenuItem);
 
 		Menu actionsMenu = new Menu("Actions");
 		MenuItem logoutMenuItem = new MenuItem("Logout");
@@ -177,6 +229,8 @@ public class Start extends Application {
 		primaryStage.setScene(scene);
 		scene.getStylesheets().add(getClass().getResource("library.css").toExternalForm());
 		primaryStage.show();
+		
+		updatePrimaryStage();
 	}
 	
 }

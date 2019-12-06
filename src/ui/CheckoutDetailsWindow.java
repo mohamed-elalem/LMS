@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import business.Book;
 import business.BookCopy;
+import business.CheckoutRecord;
 import business.CheckoutRecordEntry;
 import business.LibraryMember;
 import dataaccess.DataAccess;
@@ -69,7 +70,8 @@ public class CheckoutDetailsWindow extends Stage implements LibWindow {
 			System.out.println(bookCopy);
 
 			bookCopy.changeAvailability();
-			member.getCheckoutRecord().addCheckoutRecordEntry(CheckoutRecordEntry.createCheckoutRecordEntry(today, dueDate, bookCopy));
+			CheckoutRecord memberCheckoutRecord = member.getCheckoutRecord();
+			memberCheckoutRecord.addCheckoutRecordEntry(CheckoutRecordEntry.createCheckoutRecordEntry(memberCheckoutRecord, today, dueDate, bookCopy));
 			Start.hideAllWindows();
 			CheckoutBookWindow.INSTANCE.show();
 			
