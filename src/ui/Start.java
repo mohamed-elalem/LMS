@@ -91,7 +91,10 @@ public class Start extends Application {
 		BookCopyWindow.INSTANCE,
 		CheckoutBookWindow.INSTANCE,
 		CheckoutDetailsWindow.INSTANCE,
-		CheckoutRecordEntriesWindow.INSTANCE
+		CheckoutRecordEntriesWindow.INSTANCE,
+		AddBookWindow.INSTANCE,
+		PrintCheckoutRecordWindow.INSTANCE,
+		DetermineOverdueWindow.INSTANCE
 	};
 	
 	public static void hideAllWindows() {
@@ -197,9 +200,6 @@ public class Start extends Application {
 		MenuItem checkoutBookMenuItem = new MenuItem("Checkout a Book");
 		MenuItem viewCheckoutsMenuItem = new MenuItem("View Checkouts");
 		
-		librarianMenuItems.add(checkoutBookMenuItem);
-		librarianMenuItems.add(viewCheckoutsMenuItem);
-
 		checkoutBookMenuItem.setOnAction(evt -> {
 			hideAllWindows();
 			CheckoutBookWindow.INSTANCE.show();
@@ -210,8 +210,35 @@ public class Start extends Application {
 			CheckoutRecordEntriesWindow.INSTANCE.update();
 			CheckoutRecordEntriesWindow.INSTANCE.show();
 		});
+		
+		MenuItem mniPrintCheckout = new MenuItem("Print checkout record");
+		mniPrintCheckout.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				if(!PrintCheckoutRecordWindow.INSTANCE.isInitialized()) {
+					PrintCheckoutRecordWindow.INSTANCE.init();
+				}
+				PrintCheckoutRecordWindow.INSTANCE.show();
+			}
+		});
+		
+		MenuItem mniChechOverdue = new MenuItem("Check orverdue");
+		mniChechOverdue.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				if(!DetermineOverdueWindow.INSTANCE.isInitialized()) {
+					DetermineOverdueWindow.INSTANCE.init();
+				}
+				DetermineOverdueWindow.INSTANCE.show();
+			}
+		});
+		
+		librarianMenuItems.add(checkoutBookMenuItem);
+		librarianMenuItems.add(viewCheckoutsMenuItem);
+		librarianMenuItems.add(mniPrintCheckout);
+		librarianMenuItems.add(mniChechOverdue);
 
-		librarianMenu.getItems().addAll(checkoutBookMenuItem, viewCheckoutsMenuItem);
+		librarianMenu.getItems().addAll(checkoutBookMenuItem, viewCheckoutsMenuItem, mniPrintCheckout, mniChechOverdue);
 
 		Menu actionsMenu = new Menu("Actions");
 		MenuItem logoutMenuItem = new MenuItem("Logout");
@@ -243,6 +270,17 @@ public class Start extends Application {
 			}
 		});
 		
+		MenuItem mniAddBook = new MenuItem("Add Book");
+		mniAddBook.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				if(!AddBookWindow.INSTANCE.isInitialized()) {
+					AddBookWindow.INSTANCE.init();
+				}
+				AddBookWindow.INSTANCE.show();
+			}
+		});
+		
 		MenuItem mniAddBookCopy = new MenuItem("Add Book Copy");
 		mniAddBookCopy.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -254,10 +292,11 @@ public class Start extends Application {
 			}
 		});
 		
-		mnAdmin.getItems().addAll(mniAddLibraryMember, mniAddBookCopy);
+		mnAdmin.getItems().addAll(mniAddLibraryMember, mniAddBook, mniAddBookCopy);
 		
 		adminMenuItems.add(mniAddLibraryMember);
 		adminMenuItems.add(mniAddBookCopy);
+		adminMenuItems.add(mniAddBook);
 		
 		actionsMenu.getItems().add(logoutMenuItem);
 		
