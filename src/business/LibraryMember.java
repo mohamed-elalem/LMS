@@ -21,8 +21,7 @@ final public class LibraryMember extends Person implements Serializable {
 		return memberId;
 	}
 
-	
-	
+
 	@Override
 	public String toString() {
 		return "Member Info: " + "ID: " + memberId + ", name: " + getFirstName() + " " + getLastName() + 
@@ -32,7 +31,6 @@ final public class LibraryMember extends Person implements Serializable {
 	public static LibraryMember getMemberById(String id) {
 		DataAccess da = new DataAccessFacade();
 		HashMap<String, LibraryMember> members = da.readMemberMap();
-		LibraryMember member = null;
 		if (members.containsKey(id)) {
 			return members.get(id);
 		}

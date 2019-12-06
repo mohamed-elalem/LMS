@@ -28,8 +28,8 @@ import javafx.stage.Stage;
 public class Start extends Application {
 	private static List<MenuItem> librarianMenuItems = new ArrayList<>();
 	private static List<MenuItem> adminMenuItems = new ArrayList<>();
-	private static List<MenuItem> loggedInUser = new ArrayList<>();
-
+	private static List<MenuItem> loggedInUserItems = new ArrayList<>();
+	private static List<MenuItem> guestUserItems = new ArrayList<>();
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -47,10 +47,11 @@ public class Start extends Application {
 	public static void updatePrimaryStage() {		
 		setMenuItemVisibilityStatus(adminMenuItems, false);
 		setMenuItemVisibilityStatus(librarianMenuItems, false);
-		setMenuItemVisibilityStatus(loggedInUser, false);
+		setMenuItemVisibilityStatus(loggedInUserItems, false);
+		setMenuItemVisibilityStatus(guestUserItems, false);
 
 		if (SystemController.currentAuth != null) {
-			setMenuItemVisibilityStatus(loggedInUser, true);
+			setMenuItemVisibilityStatus(loggedInUserItems, true);
 			primStage.setTitle("Main Page - " + SystemController.currentAuth.toString());
 			
 			switch (SystemController.currentAuth) {
@@ -72,14 +73,8 @@ public class Start extends Application {
 				}
 			}
 		} else {
+			setMenuItemVisibilityStatus(guestUserItems, true);
 			primStage().setTitle("Main Page");
-			for (MenuItem menuItem : librarianMenuItems) {
-				menuItem.setDisable(true);
-			}
-			
-			for (MenuItem menuItem : adminMenuItems) {
-				menuItem.setDisable(true);
-			}
 		}
 	}
 
@@ -92,6 +87,8 @@ public class Start extends Application {
 		LoginWindow.INSTANCE,
 		AllMembersWindow.INSTANCE,	
 		AllBooksWindow.INSTANCE,
+		LibraryMemberWindow.INSTANCE,
+		BookCopyWindow.INSTANCE,
 		CheckoutBookWindow.INSTANCE,
 		CheckoutDetailsWindow.INSTANCE,
 		CheckoutRecordEntriesWindow.INSTANCE
@@ -138,6 +135,8 @@ public class Start extends Application {
 		
 		Menu optionsMenu = new Menu("Options");
 		MenuItem login = new MenuItem("Login");
+		
+		guestUserItems.add(login);
 		
 		login.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -217,7 +216,7 @@ public class Start extends Application {
 		Menu actionsMenu = new Menu("Actions");
 		MenuItem logoutMenuItem = new MenuItem("Logout");
 		
-		loggedInUser.add(logoutMenuItem);
+		loggedInUserItems.add(logoutMenuItem);
 		
 		logoutMenuItem.setOnAction(evt -> {
 			SystemController.removeAuth();
@@ -226,9 +225,43 @@ public class Start extends Application {
 			primStage().show();
 		});
 		
+		
+		
+		//Librarian Menu
+		
+		
+		//Administrator Menu
+		Menu mnAdmin = new Menu("Administrator");
+		MenuItem mniAddLibraryMember = new MenuItem("Add Library Member");
+		mniAddLibraryMember.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				if(!LibraryMemberWindow.INSTANCE.isInitialized()) {
+					LibraryMemberWindow.INSTANCE.init();
+				}
+				LibraryMemberWindow.INSTANCE.show();
+			}
+		});
+		
+		MenuItem mniAddBookCopy = new MenuItem("Add Book Copy");
+		mniAddBookCopy.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				if(!BookCopyWindow.INSTANCE.isInitialized()) {
+					BookCopyWindow.INSTANCE.init();
+				}
+				BookCopyWindow.INSTANCE.show();
+			}
+		});
+		
+		mnAdmin.getItems().addAll(mniAddLibraryMember, mniAddBookCopy);
+		
+		adminMenuItems.add(mniAddLibraryMember);
+		adminMenuItems.add(mniAddBookCopy);
+		
 		actionsMenu.getItems().add(logoutMenuItem);
 		
-		mainMenu.getMenus().addAll(optionsMenu, librarianMenu, actionsMenu);
+		mainMenu.getMenus().addAll(optionsMenu, librarianMenu, mnAdmin, actionsMenu);
 
 		Scene scene = new Scene(topContainer, 420, 375);
 		primaryStage.setScene(scene);
