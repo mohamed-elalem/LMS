@@ -1,6 +1,7 @@
 package dataaccess;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
 final public class User implements Serializable {
 	
@@ -28,6 +29,17 @@ final public class User implements Serializable {
 	@Override
 	public String toString() {
 		return "[" + id + ":" + password + ", " + authorization.toString() + "]";
+	}
+	
+	public static User getUserById(String id) {
+		DataAccess da = new DataAccessFacade();
+		HashMap<String, User> users = da.readUserMap();
+
+		User user = null;
+		if (users.containsKey(id)) {
+			user = users.get(id);
+		}
+		return user;
 	}
 	
 }
