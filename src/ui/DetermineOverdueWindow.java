@@ -1,5 +1,9 @@
 package ui;
 
+import java.time.LocalDate;
+
+import business.BookCopy;
+import business.CheckoutRecord;
 import business.CheckoutRecordController;
 import business.CheckoutRecordControllerImpl;
 import business.CheckoutRecordEntry;
@@ -54,7 +58,7 @@ public class DetermineOverdueWindow extends Stage implements LibWindow {
         
         int rowIdx = 0;
 
-        Text scenetitle = new Text("Checkout record");
+        Text scenetitle = new Text("Check overdue");
         scenetitle.setFont(Font.font("Harlow Solid Italic", FontWeight.NORMAL, 20)); //Tahoma
         grid.add(scenetitle, 0, rowIdx++, 2, 1);
 
@@ -74,12 +78,14 @@ public class DetermineOverdueWindow extends Stage implements LibWindow {
 				try {
 					CheckoutRecordController ctrl = new CheckoutRecordControllerImpl();
 					CheckoutRecordEntry rs = ctrl.checkOverdue(txtIsbn.getText(), Integer.parseInt(txtcopy.getText()));
-					if (rs != null) {
+					if (rs == null) {
+						txtResult.setText("");
 						messageBar.setFill(Start.Colors.red);
-						messageBar.setText("Overdue!");
+						messageBar.setText("The copy is available");
 					} else {
-						messageBar.setFill(Start.Colors.green);
-						messageBar.setText("Not yet");
+						txtResult.setText(buildOutput(rs));
+						//messageBar.setFill(Start.Colors.green);
+						//messageBar.setText("Not yet");
 					}
              	    
 				} catch (Exception ex) {
@@ -113,6 +119,35 @@ public class DetermineOverdueWindow extends Stage implements LibWindow {
         setScene(scene);
         isInitialized(true);
 		
+	}
+	
+	protected String buildOutput(CheckoutRecordEntry entry) {
+		StringBuilder sb = new StringBuilder();
+		
+		if (LocalDate.now().isAfter(entry.getDueDate())) {
+			sb.append("Overdue!").append("\n");
+		} else {
+			sb.append("Not yet!").append("\n");
+		}
+		sb.append("Member: " + entry.getCheckoutRecord().getMember().fullName());
+		sb.append("\n");
+		sb.append("--------------------");
+		sb.append("\n");
+		sb.append("ISBN").append("\t");
+		sb.append("Title").append("\t");
+		sb.append("CopyNo").append("\t");
+		sb.append("Checkout date").append("\t");
+		sb.append("Due date").append("\n");
+		sb.append("--------------------");
+		sb.append("\n");
+		BookCopy copy = entry.getBookCopy();
+		sb.append(copy.getBook().getIsbn()).append("\t");
+		sb.append(copy.getBook().getTitle()).append("\t");
+		sb.append(copy.getCopyNum()).append("\t");
+		sb.append(entry.getCheckoutDate()).append("\t");
+		sb.append(entry.getDueDate()).append("\n");
+		sb.append("--------------------");
+		return sb.toString();
 	}
 
 }

@@ -2,7 +2,6 @@ package business;
 
 
 import java.time.LocalDate;
-import java.util.HashMap;
 
 import dataaccess.DataAccess;
 import dataaccess.DataAccessFacade;
@@ -12,12 +11,12 @@ public class CheckoutRecordControllerImpl implements CheckoutRecordController {
 	DataAccess da = new DataAccessFacade();
 
 	@Override
-	public void printRecord(String memberID) throws MemberNotFoundException {
+	public CheckoutRecord findCheckoutRecordByMember(String memberID) throws MemberNotFoundException {
 		LibraryMember member =  da.readMemberMap().get(memberID);
 		if (member == null) {
 			throw new MemberNotFoundException("Member not found!");
 		}
-		System.out.println(member.getCheckoutRecord().getCheckoutRecordEntries());
+		return member.getCheckoutRecord();
 		
 	}
 
@@ -32,11 +31,12 @@ public class CheckoutRecordControllerImpl implements CheckoutRecordController {
 		if (copy == null) {
 			throw new BookCopyNotFoundException("Book Copy not found");
 		}
-		CheckoutRecordEntry entry = findEntryByBookCopy(isbn, copyNum);
-		if (entry != null && LocalDate.now().isAfter(entry.getDueDate())) {
-			return entry;
-		}
-		return null;
+		return findEntryByBookCopy(isbn, copyNum);
+//		CheckoutRecordEntry entry = findEntryByBookCopy(isbn, copyNum);
+//		if (entry != null && LocalDate.now().isAfter(entry.getDueDate())) {
+//			return entry;
+//		}
+//		return null;
 	}
 
 	private CheckoutRecordEntry findEntryByBookCopy(String isbn, int copyNum) {

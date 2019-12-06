@@ -10,6 +10,7 @@ import business.Author;
 import business.Book;
 import business.BookCopy;
 import business.CheckoutRecord;
+import business.CheckoutRecordEntry;
 import business.LibraryMember;
 
 /**
@@ -59,15 +60,19 @@ public class TestData {
 		
 		libraryMember = new LibraryMember("1003", "Sarah", "Eagleton", "451-234-8811", addresses.get(6));
 		members.add(libraryMember);
-//		CheckoutRecord record = new CheckoutRecord(libraryMember);
-//		
-//		BookCopy copy = allBooks.get(0).getCopy(1);
-//		LocalDate dateCheckout = LocalDate.of(2019, 11, 1);
-//		record.addEntry(copy, dateCheckout, dateCheckout.plusDays(copy.getBook().getMaxCheckoutLength()));
-//		
-//		copy = allBooks.get(1).getCopy(1);
-//		dateCheckout = LocalDate.of(2019, 11, 20);
-//		record.addEntry(copy, dateCheckout, dateCheckout.plusDays(copy.getBook().getMaxCheckoutLength()));
+		CheckoutRecord record = libraryMember.getCheckoutRecord();
+		
+		BookCopy copy = allBooks.get(0).getCopy(1);
+		LocalDate dateCheckout = LocalDate.of(2019, 11, 1);
+		CheckoutRecordEntry entry = CheckoutRecordEntry
+				.createCheckoutRecordEntry(record, dateCheckout, dateCheckout.plusDays(copy.getBook().getMaxCheckoutLength()), copy);
+		record.addCheckoutRecordEntry(entry);
+		
+		copy = allBooks.get(1).getCopy(1);
+		dateCheckout = LocalDate.of(2019, 11, 30);
+		entry = CheckoutRecordEntry
+				.createCheckoutRecordEntry(record, dateCheckout, dateCheckout.plusDays(copy.getBook().getMaxCheckoutLength()), copy);
+		record.addCheckoutRecordEntry(entry);
 		
 		libraryMember = new LibraryMember("1004", "Ricardo", "Montalbahn", "641-472-2871", addresses.get(7));
 		members.add(libraryMember);

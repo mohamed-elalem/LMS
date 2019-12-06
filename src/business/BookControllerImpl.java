@@ -43,8 +43,8 @@ public class BookControllerImpl implements BookController{
 		for (int i = 0; i < numCopies - 1; i++) {
 			book.addCopy();
 		}
-		//da.saveNewBook(book);
-		System.out.println(book);
+		da.saveNewBook(book);
+		//System.out.println(book);
 	}
 
 }

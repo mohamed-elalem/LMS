@@ -88,12 +88,18 @@ public class AddBookWindow extends Stage implements LibWindow {
 					bookCtrl.create(isbn, title, authors, maxCheckoutLength, numCopies);
 					messageBar.setFill(Start.Colors.green);
              	    messageBar.setText("Saved successful");
+             	    resetInfo();
+             	    
 				} catch (Exception ex) {
 					messageBar.setFill(Start.Colors.red);
         			messageBar.setText("Error! " + ex.getMessage());
 				}
 			}
+
+			
 		});
+
+		
 		
 		Button backBtn = new Button("<= Back to Main");
         backBtn.setOnAction(new EventHandler<ActionEvent>() {
@@ -118,6 +124,15 @@ public class AddBookWindow extends Stage implements LibWindow {
 		scene.getStylesheets().add(getClass().getResource("library.css").toExternalForm());
         setScene(scene);
         isInitialized(true);
+		
+	}
+	
+	private void resetInfo() {
+		txtIsbn.setText("");
+		txtTitle.setText("");
+		txtAuthors.setText("");
+		txtMaxCkoLength.setText("21");
+		txtCopies.setText("1");
 		
 	}
 
