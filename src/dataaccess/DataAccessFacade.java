@@ -1,4 +1,5 @@
 package dataaccess;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -11,9 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import business.Book;
-import business.BookCopy;
 import business.LibraryMember;
-import dataaccess.DataAccessFacade.StorageType;
 
 
 public class DataAccessFacade implements DataAccess {
@@ -26,6 +25,7 @@ public class DataAccessFacade implements DataAccess {
 												"src",
 												"dataaccess",
 												"storage").toString();
+
 	public static final String DATE_PATTERN = "MM/dd/yyyy";
 	
 	//implement: other save operations
@@ -38,6 +38,14 @@ public class DataAccessFacade implements DataAccess {
 	
 	public void saveBooks(List<Book> books) {
 		loadBookMap(books);
+	}
+	
+	public void saveNewBook(Book book) {
+		HashMap<String, Book> books = readBooksMap();
+		String isbn = book.getIsbn();
+		books.put(isbn, book);
+		saveToStorage(StorageType.BOOKS, books);
+
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -16,11 +16,19 @@ final public class LibraryMember extends Person implements Serializable {
 		checkoutRecord = new CheckoutRecord(this);
 	}
 	
-	
 	public String getMemberId() {
 		return memberId;
 	}
 
+	
+	public CheckoutRecord getCheckoutRecord() {
+		return checkoutRecord;
+	}
+	
+	public void setCheckoutRecord(CheckoutRecord checkoutRecord) {
+		this.checkoutRecord = checkoutRecord;
+	}
+	
 
 	@Override
 	public String toString() {
@@ -37,9 +45,6 @@ final public class LibraryMember extends Person implements Serializable {
 		return null;
 	}
 	
-	public CheckoutRecord getCheckoutRecord() {
-		return checkoutRecord;
-	}
 	
 	public String fullName() {
 		return getFirstName() + " " + getLastName();
