@@ -200,9 +200,6 @@ public class Start extends Application {
 		MenuItem checkoutBookMenuItem = new MenuItem("Checkout a Book");
 		MenuItem viewCheckoutsMenuItem = new MenuItem("View Checkouts");
 		
-		librarianMenuItems.add(checkoutBookMenuItem);
-		librarianMenuItems.add(viewCheckoutsMenuItem);
-
 		checkoutBookMenuItem.setOnAction(evt -> {
 			hideAllWindows();
 			CheckoutBookWindow.INSTANCE.show();
@@ -235,6 +232,11 @@ public class Start extends Application {
 				DetermineOverdueWindow.INSTANCE.show();
 			}
 		});
+		
+		librarianMenuItems.add(checkoutBookMenuItem);
+		librarianMenuItems.add(viewCheckoutsMenuItem);
+		librarianMenuItems.add(mniPrintCheckout);
+		librarianMenuItems.add(mniChechOverdue);
 
 		librarianMenu.getItems().addAll(checkoutBookMenuItem, viewCheckoutsMenuItem, mniPrintCheckout, mniChechOverdue);
 
@@ -294,6 +296,7 @@ public class Start extends Application {
 		
 		adminMenuItems.add(mniAddLibraryMember);
 		adminMenuItems.add(mniAddBookCopy);
+		adminMenuItems.add(mniAddBook);
 		
 		actionsMenu.getItems().add(logoutMenuItem);
 		
