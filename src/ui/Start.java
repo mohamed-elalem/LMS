@@ -1,5 +1,6 @@
 package ui;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,6 +26,10 @@ import javafx.stage.Stage;
 
 
 public class Start extends Application {
+	private static List<MenuItem> librarianMenuItems = new ArrayList<>();
+	private static List<MenuItem> adminMenuItems = new ArrayList<>();
+	private static List<MenuItem> loggedInUser = new ArrayList<>();
+
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -32,10 +37,49 @@ public class Start extends Application {
 	public static Stage primStage() {
 		return primStage;
 	}
+ 	
+	public static void setMenuItemVisibilityStatus(List<MenuItem> items, boolean visible) {
+		for (MenuItem item : items) {
+			item.setDisable(!visible);
+		}
+	}
 	
-	public static void updatePrimaryStage() {
+	public static void updatePrimaryStage() {		
+		setMenuItemVisibilityStatus(adminMenuItems, false);
+		setMenuItemVisibilityStatus(librarianMenuItems, false);
+		setMenuItemVisibilityStatus(loggedInUser, false);
+
 		if (SystemController.currentAuth != null) {
+			setMenuItemVisibilityStatus(loggedInUser, true);
 			primStage.setTitle("Main Page - " + SystemController.currentAuth.toString());
+			
+			switch (SystemController.currentAuth) {
+			case LIBRARIAN:
+				setMenuItemVisibilityStatus(librarianMenuItems, true);
+				break;
+			case ADMIN:
+				setMenuItemVisibilityStatus(adminMenuItems, true);
+				break;
+			case BOTH:
+				setMenuItemVisibilityStatus(librarianMenuItems, true);
+				setMenuItemVisibilityStatus(adminMenuItems, true);
+				for (MenuItem menuItem : librarianMenuItems) {
+					menuItem.setDisable(false);
+				}
+				
+				for (MenuItem menuItem : adminMenuItems) {
+					menuItem.setDisable(false);
+				}
+			}
+		} else {
+			primStage().setTitle("Main Page");
+			for (MenuItem menuItem : librarianMenuItems) {
+				menuItem.setDisable(true);
+			}
+			
+			for (MenuItem menuItem : adminMenuItems) {
+				menuItem.setDisable(true);
+			}
 		}
 	}
 
@@ -47,7 +91,10 @@ public class Start extends Application {
 	private static Stage[] allWindows = { 
 		LoginWindow.INSTANCE,
 		AllMembersWindow.INSTANCE,	
-		AllBooksWindow.INSTANCE
+		AllBooksWindow.INSTANCE,
+		CheckoutBookWindow.INSTANCE,
+		CheckoutDetailsWindow.INSTANCE,
+		CheckoutRecordEntriesWindow.INSTANCE
 	};
 	
 	public static void hideAllWindows() {
@@ -55,6 +102,12 @@ public class Start extends Application {
 		for(Stage st: allWindows) {
 			st.hide();
 		}
+	}
+	
+	public static void showPrimaryStageOnly() {
+		hideAllWindows();
+		updatePrimaryStage();
+		primStage().show();
 	}
 	
 	@Override
@@ -140,12 +193,49 @@ public class Start extends Application {
             }
 		});	
 		optionsMenu.getItems().addAll(login, bookIds, memberIds);
+		
+		Menu librarianMenu = new Menu("Librarian");
+		MenuItem checkoutBookMenuItem = new MenuItem("Checkout a Book");
+		MenuItem viewCheckoutsMenuItem = new MenuItem("View Checkouts");
+		
+		librarianMenuItems.add(checkoutBookMenuItem);
+		librarianMenuItems.add(viewCheckoutsMenuItem);
 
-		mainMenu.getMenus().addAll(optionsMenu);
+		checkoutBookMenuItem.setOnAction(evt -> {
+			hideAllWindows();
+			CheckoutBookWindow.INSTANCE.show();
+		});
+		
+		viewCheckoutsMenuItem.setOnAction(evt -> {
+			hideAllWindows();
+			CheckoutRecordEntriesWindow.INSTANCE.update();
+			CheckoutRecordEntriesWindow.INSTANCE.show();
+		});
+
+		librarianMenu.getItems().addAll(checkoutBookMenuItem, viewCheckoutsMenuItem);
+
+		Menu actionsMenu = new Menu("Actions");
+		MenuItem logoutMenuItem = new MenuItem("Logout");
+		
+		loggedInUser.add(logoutMenuItem);
+		
+		logoutMenuItem.setOnAction(evt -> {
+			SystemController.removeAuth();
+			hideAllWindows();
+			updatePrimaryStage();
+			primStage().show();
+		});
+		
+		actionsMenu.getItems().add(logoutMenuItem);
+		
+		mainMenu.getMenus().addAll(optionsMenu, librarianMenu, actionsMenu);
+
 		Scene scene = new Scene(topContainer, 420, 375);
 		primaryStage.setScene(scene);
 		scene.getStylesheets().add(getClass().getResource("library.css").toExternalForm());
 		primaryStage.show();
+		
+		updatePrimaryStage();
 	}
 	
 }

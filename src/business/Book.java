@@ -4,8 +4,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+
+import dataaccess.DataAccess;
+import dataaccess.DataAccessFacade;
 
 /**
  *
@@ -112,9 +116,35 @@ final public class Book implements Serializable {
 	public int getMaxCheckoutLength() {
 		return maxCheckoutLength;
 	}
+	
+	public int getAvailableCopiesCount() {
+		int availableCopy = 0;
+		for (BookCopy bookCopy : copies) {
+			if (bookCopy.isAvailable()) {
+				availableCopy++;
+			}
+		}
+		
+		return availableCopy;
+	}
 
 	
-	
+	public static Book getBookByISBN(String isbn) {
+		DataAccess da = new DataAccessFacade();
+		
+		HashMap<String, Book> books = da.readBooksMap();
+		Book foundBook = null;
+
+		for (String bookId : books.keySet()) {
+			Book book = books.get(bookId);
+			if (book.isAvailable() && book.getIsbn().equals(isbn)) {
+				foundBook = book;
+				break;
+			}
+		}
+		
+		return foundBook;
+	}
 	
 	
 }
