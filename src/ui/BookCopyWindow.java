@@ -1,10 +1,7 @@
 package ui;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import business.Book;
 import dataaccess.DataAccess;
 import dataaccess.DataAccessFacade;
@@ -31,16 +28,31 @@ public class BookCopyWindow extends Stage implements LibWindow {
 		GridPane gridPane = new GridPane();
 		Label lblISBN = new Label("ISBN:");
 		TextField txtISBN = new TextField();
+		
+		Label lblNumofCopy = new Label("NumofCopy:");
+		TextField txtNumofCopy = new TextField();
+		txtNumofCopy.setPrefWidth(40);
 		Button btnAddCopy = new Button("Add a Copy");
 		btnAddCopy.setOnAction(new EventHandler<ActionEvent> () {
 			@Override
 			public void handle(ActionEvent e) {
 				String isbn = txtISBN.getText();
+				int numOfCopy = 0;
+				try {
+					numOfCopy = Integer.parseInt(txtNumofCopy.getText());
+				}catch(Exception ex) {
+					Alert alert = new Alert(AlertType.ERROR);
+					alert.setTitle("Error");
+					alert.setContentText("You must enter only numeric!");
+					alert.show();
+					return;
+				}
 				boolean found = false;
 				List<Book> books = dataAccess.readBooksMap().values().stream().collect(Collectors.toList());
 				for(Book book: books)
 					if(book.getIsbn().equals(isbn)) {
-						book.addCopy();
+						for(int i=0;i<numOfCopy;i++)
+							book.addCopy();
 						found = true;
 						break;
 					}
@@ -52,6 +64,7 @@ public class BookCopyWindow extends Stage implements LibWindow {
 					return;
 				}
 				dataAccess.saveBooks(books);
+				
 				dataAccess.readBooksMap().values().
 				forEach(book -> System.out.println(book.toString()));
 				
@@ -59,13 +72,15 @@ public class BookCopyWindow extends Stage implements LibWindow {
 				alert.setTitle("Information");
 				alert.setContentText("A Book Copy Saved!");
 				alert.show();
-				txtISBN.clear(); txtISBN.requestFocus();
+				txtISBN.clear(); txtNumofCopy.clear(); txtISBN.requestFocus();
 			}
 		});
 		
 		gridPane.add(lblISBN, 0, 0);
 		gridPane.add(txtISBN, 1, 0);
-		gridPane.add(btnAddCopy, 2, 0);
+		gridPane.add(lblNumofCopy, 2, 0);
+		gridPane.add(txtNumofCopy, 3, 0);
+		gridPane.add(btnAddCopy, 4, 0);
 		setTitle("Add Book Copy");
 		setScene(new Scene(gridPane));
 	}
