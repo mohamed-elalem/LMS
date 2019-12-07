@@ -31,6 +31,9 @@ public class BookControllerImpl implements BookController{
 		if (numCopies <= 0)
 			throw new InvalidBookException("Book has at least one copy.");
 		
+		if (da.readBooksMap().containsKey(isbn)) 
+			throw new InvalidBookException("Book ISBN is existing.");
+		
 		List<Author> authors = new ArrayList<Author>();
 		for (String name : nameAuthors) {
 			String firstName = name.split(" ")[0];
@@ -43,8 +46,25 @@ public class BookControllerImpl implements BookController{
 		for (int i = 0; i < numCopies - 1; i++) {
 			book.addCopy();
 		}
+		debugConsole(book);
 		da.saveNewBook(book);
-		//System.out.println(book);
+		
+	}
+
+	private void debugConsole(Book book) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("ISBN: ").append(book.getIsbn()).append("\n");
+		sb.append("Title: ").append(book.getTitle()).append("\n");
+		sb.append("MaxCheckoutLength: ").append(book.getMaxCheckoutLength()).append("\n");
+		sb.append("Authors: ").append("\n");
+		for (Author a : book.getAuthors()) {
+			sb.append(a.getFirstName()).append(" ").append(a.getLastName()).append("\n");
+		}
+		sb.append("Copies: ").append("\n");
+		for (BookCopy c : book.getCopies()) {
+			sb.append(c.getCopyNum()).append(" ").append(c.isAvailable()?"Available":"Checked out").append("\n");
+		}
+		System.out.println(sb.toString());
 	}
 
 }
