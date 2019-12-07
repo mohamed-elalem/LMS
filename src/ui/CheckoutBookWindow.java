@@ -29,7 +29,7 @@ public class CheckoutBookWindow extends Stage implements LibWindow {
 		root.setPadding(new Insets(15, 15, 15, 15));
 		root.setAlignment(Pos.CENTER);
 		
-		Label memberIdLabel = new Label("User ID");
+		Label memberIdLabel = new Label("Member ID");
 		TextField memberIdTextField = new TextField();
 		
 		GridPane memberIdGridPane = new GridPane();
