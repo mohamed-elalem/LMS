@@ -222,7 +222,7 @@ public class Start extends Application {
 			}
 		});
 		
-		MenuItem mniChechOverdue = new MenuItem("Check orverdue");
+		MenuItem mniChechOverdue = new MenuItem("Check overdue");
 		mniChechOverdue.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
