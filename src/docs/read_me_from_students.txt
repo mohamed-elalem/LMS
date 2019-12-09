@@ -4,8 +4,19 @@
 
 Mohamed Elalem:
 
-Hou Xsron:
-
+Hou XSron:
+UML:
+	Use Case Diagram
+	Add A Book Copy
+	Add Library Member
+Implementation:
+	Start.java: update menu
+	1. Add new library member:
+		LibraryMemberWindow.java
+		DataAccessFacade.java: update new method saveNewMember
+	2. Add A Book Copy:
+		BookCopyWindow.java
+		DataAccessFacade.java: update new method saveBooks 
 Hoang Thao Nguyen:
 UML:
 	Class diagram
