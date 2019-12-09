@@ -3,6 +3,13 @@
 //that need to be mentioned.
 
 Mohamed Elalem:
+UML:
+	Login Sequence Diagram
+	Checkout Record Entry Sequence Diagram
+Implementation:
+	1. Role based login
+	2. Librarian book checkout
+	3. Checkout Record Entry listing.
 
 Hou XSron:
 UML:
